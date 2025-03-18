@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  lang="en"
+>
+  <head th:replace="layout :: head('Eintrag hinzufügen')"> </head>
+  <body>
+    <div th:replace="~{layout :: nav}"></div>
+
+    <div class="container">
+        <h1>Einträge</h1>
+        <a th:href="@{/entries/new}" class="btn btn-primary">Neuer Eintrag</a>
+        <div class="entry-list">
+            <div th:each="entry : ${entries}" class="entry-item">
+                <h2 th:text="${entry.title}"></h2>
+                <p th:text="${entry.content}"></p>
+                <p>
+                    <span class="tag-item"  th:each="tag : ${entry.tags}" th:text="${tag.name}">Tag</span>
+                </p>
+            </div>
+        </div>
+      </div>
+    
+    <div th:replace="layout :: footer"></div>
+  </body>
+</html>

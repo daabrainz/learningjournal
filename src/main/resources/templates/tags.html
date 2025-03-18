@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="layout :: head('Liste der Tags')"></head>
+<body>
+<div th:replace="~{layout :: nav}"></div>
+
+<div class="container">
+    <h1>Liste der Tags</h1>
+    <a th:href="@{/tags/new}" class="btn btn-primary">Neuer Tag</a>
+    <ul>
+        <li th:each="tag : ${tags}" class="tag-item">
+            <span class="tag-item" th:text="${tag.name}"></span>
+            <a th:href="@{'/tags/' + ${tag.id} + '/delete'}" class="btn btn-danger">Löschen</a>
+          </li>
+        </ul>
+      </div>
+
+<div th:replace="layout :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  lang="en"
+>
+  <head th:fragment="head(title)">
+    <meta charset="UTF-8" />
+    <title th:text="${title}">Learning Journal</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body>
+    
+    <!-- Gemeinsame Navigation -->
+    <div th:fragment="nav">
+      <nav>
+        <a th:href="@{/}">Startseite</a>
+        <a th:href="@{/entries}">Einträge</a>
+        <a th:href="@{/tags}">Tags</a>
+
+        <div class="auth-links">
+          <a th:href="@{/login}">Login</a>
+          <a th:href="@{/register}">Register</a>
+          <form
+            th:action="@{/logout}"
+            method="post"
+            style="display: inline"
+          >
+            <button type="submit">Logout</button>
+          </form>
+        </div>
+      </nav>
+      <hr />
+    </div>
+
+    <!-- Seiteninhalt -->
+    <div th:fragment="content"></div>
+    <div th:insert="${content}"></div>
+
+    <!-- Gemeinsamer Footer -->
+    <div th:fragment="footer">
+      <footer>
+        <p>&copy; 2025 Learning Journal</p>
+      </footer>
+    </div>
+  </body>
+</html>
