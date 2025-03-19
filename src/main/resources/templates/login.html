@@ -18,31 +18,29 @@
       <div th:if="${param.login}">
         <div class="alert alert-success">Du wurdest angemeldet</div>
       </div>
-      <form th:action="@{/login}" method="post">
-        <div class="form-group">
-          <label for="username">Benutzername</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            class="form-control"
-            required
-            autofocus
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">Passwort</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            required
-          />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Anmelden</button>
-      </form>
+      
+      <div class="container">
+        <form th:action="@{/login}" method="post">
+            <label for="username">Benutzername</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="form-control"
+              required
+              autofocus
+            />
+            <label for="password">Passwort</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              required
+            />
+          <button type="submit" class="btn btn-primary">Anmelden</button>
+        </form>
+      </div>
     </div>
     <div th:replace="layout :: footer"></div>
   </body>

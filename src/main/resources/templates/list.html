@@ -8,21 +8,24 @@
   <body>
     <div th:replace="~{layout :: nav}"></div>
 
-    <div class="container">
-      <h1>Einträge</h1>
-      <a th:href="@{/entries/new}" class="btn btn-primary">Neuer Eintrag</a>
-      <div class="entry-list">
-        <div th:each="entry : ${entries}" class="entry-item">
-          <h2 th:text="${entry.title}"></h2>
-          <p th:text="${entry.content}"></p>
-          <p>
-            <span
-              class="tag-item"
-              th:each="tag : ${entry.tags}"
-              th:text="${tag.name}"
-              >Tag</span
-            >
-          </p>
+    <div class="container mt-5">
+      <h1 class="mb-4">Einträge 📝</h1>
+      <a th:href="@{/entries/new}" class="btn btn-primary mb-4">Neuer Eintrag</a>
+      <div class="row">
+        <div th:each="entry : ${entries}" class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title" th:text="${entry.title}"></h2>
+              <p class="card-text" th:text="${entry.content}"></p>
+              <p>
+                <span
+                  class="badge bg-secondary me-1"
+                  th:each="tag : ${entry.tags}"
+                  th:text="${tag.name}"
+                ></span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

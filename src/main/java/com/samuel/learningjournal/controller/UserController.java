@@ -32,7 +32,17 @@ public class UserController {
     }
     
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username, @RequestParam String password) {
+    public String registerUser(@RequestParam String username, @RequestParam String password, @RequestParam String confirmPassword, Model model) {
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("error", "Passwörter stimmen nicht überein. 😢");
+            return "register";
+        } 
+          
+        if (userRepository.findByUsername(username) != null) {
+            model.addAttribute("error", "Benutzername existiert bereits. 🫣");
+            return "register";
+        }
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));

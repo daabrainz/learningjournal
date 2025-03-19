@@ -4,16 +4,20 @@
 <body>
 <div th:replace="~{layout :: nav}"></div>
 
-<div class="container">
-    <h1>Liste der Tags</h1>
-    <a th:href="@{/tags/new}" class="btn btn-primary">Neuer Tag</a>
-    <ul>
-        <li th:each="tag : ${tags}" class="tag-item">
-            <span class="tag-item" th:text="${tag.name}"></span>
-            <a th:href="@{'/tags/' + ${tag.id} + '/delete'}" class="btn btn-danger">Löschen</a>
-          </li>
-        </ul>
-      </div>
+<div class="container mt-5">
+    <h1 class="mb-4">Tags 🏷️</h1>
+    <a th:href="@{/tags/new}" class="btn btn-primary mb-4">Neuer Tag</a>
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="list-group">
+                <li th:each="tag : ${tags}" class="list-group-item d-flex justify-content-between align-items-center">
+                    <span th:text="${tag.name}"></span>
+                    <a th:href="@{'/tags/' + ${tag.id} + '/delete'}" class="btn btn-danger btn-sm">Löschen</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <div th:replace="layout :: footer"></div>
 </body>
