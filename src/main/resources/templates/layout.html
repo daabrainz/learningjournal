@@ -18,17 +18,20 @@
         <a th:href="@{/entries}">Einträge</a>
         <a th:href="@{/tags}">Tags</a>
 
-        <div class="auth-links">
+        <div class="auth-links" sec:authorize="!isAuthenticated()">
+
           <a th:href="@{/login}">Login</a>
           <a th:href="@{/register}">Register</a>
-          <form
-            th:action="@{/logout}"
-            method="post"
-            style="display: inline"
-          >
-            <button type="submit">Logout</button>
-          </form>
         </div>
+        <form
+        sec:authorize="isAuthenticated()"
+          th:action="@{/logout}"
+          method="post"
+          style="display: inline"
+          class="auth-links"
+        >
+          <button type="submit">Logout</button>
+        </form>
       </nav>
       <hr />
     </div>
@@ -38,10 +41,9 @@
     <div th:insert="${content}"></div>
 
     <!-- Gemeinsamer Footer -->
-    <div th:fragment="footer">
-      <footer>
+
+      <footer th:fragment="footer">
         <p>&copy; 2025 Learning Journal</p>
       </footer>
-    </div>
   </body>
 </html>
