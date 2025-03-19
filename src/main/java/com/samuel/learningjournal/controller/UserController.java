@@ -5,15 +5,18 @@ import org.springframework.ui.Model;
 import com.samuel.learningjournal.entity.User;
 import com.samuel.learningjournal.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Controller
 public class UserController {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/users")
@@ -21,14 +24,20 @@ public class UserController {
         model.addAttribute("users", userRepository.findAll());
         return "users";
     }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
     
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole("USER");
         userRepository.save(user);
-        return "redirect:/users";
+        return "redirect:/login";
     };
 }
