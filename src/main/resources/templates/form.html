@@ -11,23 +11,38 @@
     <div class="container">
       <h2>Neuer Eintrag</h2>
       <form th:action="@{/entries}" th:object="${entry}" method="post">
-          <div class="form-group">
-              <label for="title">Titel:</label>
-              <input type="text" id="title" th:field="*{title}" class="form-control" required />
-          </div>
-          <div class="form-group">
-              <label for="content">Inhalt:</label>
-              <textarea id="content" th:field="*{content}" class="form-control" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="tags">Tags</label>
-            <select id="tags" name="tagIds" multiple class="form-control">
-              <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">Speichern</button>
+        <div class="form-group">
+          <label for="title">Titel:</label>
+          <input
+            type="text"
+            id="title"
+            th:field="*{title}"
+            class="form-control"
+            required
+          />
+          <label for="content">Inhalt:</label>
+          <textarea
+            id="content"
+            th:field="*{content}"
+            class="form-control" 
+            maxlength="255" 
+            rows="5"
+            required
+          ></textarea>
+          <label class="form-label" for="tags">Tags</label>
+          <select id="tags" name="tagIds" multiple class="form-control">
+            <option
+              th:each="tag : ${tags}"
+              th:value="${tag.id}"
+              th:text="${tag.name}"
+            ></option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a th:href="@{/entries}" class="btn btn-danger">Abbrechen</a>
       </form>
-  </div>
+    </div>
     <div th:replace="layout :: footer"></div>
+    <div th:replace="layout :: script"></div>
   </body>
 </html>

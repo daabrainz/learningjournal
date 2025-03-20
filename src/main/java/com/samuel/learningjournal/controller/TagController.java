@@ -44,7 +44,7 @@ public class TagController {
     //Bestimmten Tag löschen
     @GetMapping("/{id}/delete")
     public String deleteTag(@PathVariable Long id) {
-        Tag tag = tagRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Tag not found with id: " + id));
+        Tag tag = tagRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Tag mit ID: " + id + " nicht gefunden. " + id));
         for (Entry entry : tag.getEntries()) {
             entry.getTags().remove(tag);
         }

@@ -9,7 +9,7 @@
     <div th:replace="~{layout :: nav}"></div>
 
     <h2>Registrierung</h2>
-    <div class="container">
+    <div class="container mt-5">
       <div th:if="${error}" class="alert alert-danger" role="alert">
         <span th:text="${error}"></span>
       </div>
@@ -50,5 +50,6 @@
     </div>
 
     <div th:replace="layout :: footer"></div>
+    <div th:replace="layout :: script"></div>
   </body>
 </html>

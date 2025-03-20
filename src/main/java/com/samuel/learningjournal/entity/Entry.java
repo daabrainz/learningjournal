@@ -1,5 +1,6 @@
 package com.samuel.learningjournal.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -26,5 +27,5 @@ public class Entry {
         joinColumns = @JoinColumn(name = "entry_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")  
     )
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 }

@@ -9,16 +9,24 @@
     <div th:replace="~{layout :: nav}"></div>
 
     <div class="container">
-        <h2>Neuer Tag</h2>
-        <form th:action="@{/tags}" method="post">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" class="form-control" required />
-            </div>
-            <button type="submit" class="btn btn-primary">Speichern</button>
-        </form>
+      <h2>Neuer Tag</h2>
+      <form th:action="@{/tags}" method="post">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a th:href="@{/tags}" class="btn btn-danger">Abbrechen</a>
+      </form>
     </div>
 
     <div th:replace="layout :: footer"></div>
+    <div th:replace="layout :: script"></div>
   </body>
 </html>

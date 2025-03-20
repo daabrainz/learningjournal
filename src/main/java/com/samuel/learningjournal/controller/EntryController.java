@@ -24,9 +24,9 @@ public class EntryController {
         this.tagRepository = tagRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String index() {
-        return "index";
+        return "home";
     }
     
     // Alle vorhandenen Einträge anzeigen
@@ -57,5 +57,45 @@ public class EntryController {
         entryRepository.save(entry);
         return "redirect:/entries";
     }
+
     
+    @GetMapping("/entries/{id}/delete")
+    public String deleteEntry(@PathVariable Long id) {
+        entryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Eintrag mit ID: " + id + " nicht gefunden."));
+        entryRepository.deleteById(id);
+        return "redirect:/entries";
+    }
+    
+    @GetMapping("/entries/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Entry entry = entryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Ungültige Eintrags-ID: " + id));
+        model.addAttribute("entry", entry);
+        model.addAttribute("tags", tagRepository.findAll());
+        return "entry-edit";
+    }
+
+    @GetMapping("/entries/{entryId}/tags/{tagId}/remove")
+    public String removeTagFromEntry(@PathVariable Long entryId, @PathVariable Long tagId) {
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Eintrag mit der ID: " + entryId));
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Tag mit der ID: " + tagId));
+
+        entry.getTags().remove(tag);
+        entryRepository.save(entry);
+
+        return "redirect:/entries";
+    }
+
+    @PostMapping("/entries/{id}/edit")
+    public String updateEntry(@PathVariable Long id,@ModelAttribute Entry entry, @RequestParam Set<Long> tagIds) {
+        Entry existingEntry = entryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Ungültige Eintrags-ID: " + id));
+
+        existingEntry.setTitle(entry.getTitle());
+        existingEntry.setContent(entry.getContent());
+
+        Set<Tag> tags = new HashSet<>(tagRepository.findAllById(tagIds));
+        existingEntry.setTags(tags);
+
+        entryRepository.save(existingEntry);
+        return "redirect:/entries";
+    }
 }

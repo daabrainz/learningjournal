@@ -24,14 +24,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**", "/register", "/login", "/css/**")
+                .requestMatchers("/h2-console/**", "/register", "/login", "/css/**", "/js/**")
                 .permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN") 
                 .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()) 
             .formLogin(form -> form
             .loginPage("/login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/home", true)
                 .permitAll())
             .logout(logout -> logout
                 .logoutUrl("/logout")
