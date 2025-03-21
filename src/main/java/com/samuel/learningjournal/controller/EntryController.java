@@ -13,8 +13,10 @@ import com.samuel.learningjournal.repository.EntryRepository;
 import com.samuel.learningjournal.repository.TagRepository;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
+@SessionAttributes("entry")
 public class EntryController {
 
     private final EntryRepository entryRepository;
@@ -23,6 +25,11 @@ public class EntryController {
     public EntryController(EntryRepository entryRepository, TagRepository tagRepository) {
         this.entryRepository = entryRepository;
         this.tagRepository = tagRepository;
+    }
+
+    @ModelAttribute("entry")
+    public Entry entry() {
+        return new Entry();
     }
 
     @GetMapping("/home")
@@ -40,27 +47,43 @@ public class EntryController {
 
     // Neuen Eintrag erstellen
     @GetMapping("/entries/new")
-    public String showNewEntryForm(Model model) {
-        model.addAttribute("entry", new Entry());
-        model.addAttribute("tags", tagRepository.findAllByOrderByNameAsc());
+    public String showNewEntryForm(Model model, @RequestParam(required = false) Long addTag, @RequestParam(required = false) Long removeTag, @ModelAttribute("entry") Entry entry) {
+
+        // Initialisiere die Tag-Liste, falls sie noch nicht existiert
+        if (entry.getTags() == null) {
+            entry.setTags(new HashSet<>());
+        }
+
+        // Tag hinzufügen
+        if (addTag != null) {
+            Tag tag = tagRepository.findById(addTag)
+                .orElseThrow(() -> new IllegalArgumentException("Ungültiger Tag mit der ID: " + addTag));
+            entry.getTags().add(tag);
+        }
+
+        // Tag entfernen
+        if (removeTag != null) {
+            Tag tag = tagRepository.findById(removeTag)
+                .orElseThrow(() -> new IllegalArgumentException("Ungültiger Tag mit der ID: " + removeTag));
+            entry.getTags().remove(tag);
+        }
+
+        List<Tag> tags = tagRepository.findAll();
+        model.addAttribute("tags", tags);
         return "form";
     }
 
     // Neuen Eintrag zur Datenbank hinzufügen
     @PostMapping("/entries")
-    public String addEntry(@RequestParam String title, @RequestParam String content, @RequestParam Set<Long> tagIds) {
-        Entry entry = new Entry();
-        entry.setTitle(title);
-        entry.setContent(content);
-
-        Set<Tag> tags = new HashSet<>(tagRepository.findAllById(tagIds));
-        entry.setTags(tags);
-
+    public String addEntry(@ModelAttribute Entry entry, SessionStatus status) {
+        
         entryRepository.save(entry);
+
+        status.setComplete();
         return "redirect:/entries";
     }
 
-    
+    // Eintrag löschen
     @GetMapping("/entries/{id}/delete")
     public String deleteEntry(@PathVariable Long id) {
         entryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Eintrag mit ID: " + id + " nicht gefunden."));
@@ -68,6 +91,7 @@ public class EntryController {
         return "redirect:/entries";
     }
     
+    // Eintrag bearbeiten
     @GetMapping("/entries/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         Entry entry = entryRepository.findById(id)
@@ -81,6 +105,7 @@ public class EntryController {
         return "entry-edit";
     }
 
+    // Tags zu Eintrag hinzufügen
     @GetMapping("/entries/{entryId}/tags/{tagId}/add")
     public String addTagToEntry(@PathVariable Long entryId, @PathVariable Long tagId) {
         
@@ -95,6 +120,7 @@ public class EntryController {
  
     }
 
+    // Tag von Eintrag entfernen
     @GetMapping("/entries/{entryId}/tags/{tagId}/remove")
     public String removeTagFromEntry(@PathVariable Long entryId, @PathVariable Long tagId) {
         Entry entry = entryRepository.findById(entryId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Eintrag mit der ID: " + entryId));
@@ -104,11 +130,10 @@ public class EntryController {
         entry.getTags().remove(tag);
         entryRepository.save(entry);
 
-        return "redirect:/entries" + entryId + "/edit";
+        return "redirect:/entries/" + entryId + "/edit";
     }
 
-
-
+    // Eintrag aktualisieren
     @PostMapping("/entries/{id}/edit")
     public String updateEntry(
         @PathVariable Long id, 
@@ -125,7 +150,7 @@ public class EntryController {
             Set<Tag> tags = new HashSet<>(tagRepository.findAllById(tagIds));
             existingEntry.setTags(tags);
         } else {
-            existingEntry.setTags(new HashSet<>());
+            existingEntry.setTags(existingEntry.getTags());
         }
 
         entryRepository.save(existingEntry);

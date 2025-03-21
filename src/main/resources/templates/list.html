@@ -27,8 +27,6 @@
                       class="badge bg-secondary me-1"
                       th:each="tag : ${entry.tags}">
                     <span th:text="${tag.name}"></span>
-                    <a th:href="@{'/entries/' + ${entry.id} + '/tags/' + ${tag.id} + '/remove'}"
-                    class="btn btn-sm">✕</a>
                   </span>
                   </p>
                 

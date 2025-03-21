@@ -20,23 +20,53 @@
             class="form-control"
             required
           />
-          <label for="content">Inhalt:</label>
-          <textarea
-            id="content"
-            th:field="*{content}"
-            class="form-control" 
-            maxlength="255" 
-            rows="5"
-            required
-          ></textarea>
-          <label class="form-label" for="tags">Tags</label>
-          <select id="tags" name="tagIds" multiple class="form-control">
-            <option
-              th:each="tag : ${tags}"
-              th:value="${tag.id}"
-              th:text="${tag.name}"
-            ></option>
-          </select>
+
+          <div class="form-group">
+            <label for="content">Inhalt:</label>
+            <textarea
+              id="content"
+              th:field="*{content}"
+              class="form-control" 
+              maxlength="255" 
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Aktuelle Tags</label>
+            <p>
+              <span
+                class="badge bg-secondary me-1"
+                th:each="tag : ${entry.tags}">
+                <span th:text="${tag.name}"></span>
+                <a
+                  href="#"
+                  class="btn btn-sm text-white"
+                  style="text-decoration: none"
+                  th:href="@{'/entries/new?removeTag=' + ${tag.id}}">✕</a>
+              </span>
+            </p>
+          </div>
+        
+          <div class="form-group">
+            <label>Verfügbare Tags</label>
+            <p>
+              <span
+                class="badge bg-light text-dark me-1"
+                th:each="tag : ${tags}"
+                th:if="!${entry.tags.contains(tag)}">
+                <span th:text="${tag.name}"></span>
+                <a
+                  href="#"
+                  class="btn btn-sm text-primary"
+                  style="text-decoration: none"
+                  th:href="@{'/entries/new?addTag=' + ${tag.id}}">+</a>
+              </span>
+            </p>
+          </div>
+
+        
         </div>
         <button type="submit" class="btn btn-primary">Speichern</button>
         <a th:href="@{/entries}" class="btn btn-danger">Abbrechen</a>
