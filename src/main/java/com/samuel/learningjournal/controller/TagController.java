@@ -21,7 +21,7 @@ public class TagController {
     // Alle vorhandenen Tags anzeigen
     @GetMapping
     public String listTags(Model model) {
-        model.addAttribute("tags", tagRepository.findAll());
+        model.addAttribute("tags", tagRepository.findAllByOrderByNameAsc());
         return "tags";
     }
 

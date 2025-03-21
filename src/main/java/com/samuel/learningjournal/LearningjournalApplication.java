@@ -9,6 +9,8 @@ public class LearningjournalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LearningjournalApplication.class, args);
+
+
 		//         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         // String rawPassword = "admin123";
         // String encodedPassword = encoder.encode(rawPassword);

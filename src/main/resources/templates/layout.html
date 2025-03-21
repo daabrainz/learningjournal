@@ -20,7 +20,6 @@
   <body>
     <!-- Gemeinsame Navigation -->
     <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
-      
       <div class="container-fluid">
         <!-- Logo oder Startseite-Link -->
         <a class="navbar-brand" id="home" th:href="@{/home}">📓</a>
@@ -40,7 +39,6 @@
 
         <!-- Navbar-Inhalt -->
         <div class="collapse navbar-collapse" id="navbarNav">
-          
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <a class="nav-link" th:href="@{/entries}">Einträge</a>
@@ -49,7 +47,6 @@
               <a class="nav-link" th:href="@{/tags}">Tags</a>
             </li>
             Bootstrap tes
-            
           </ul>
 
           <!-- Authentifizierungs-Links -->
@@ -57,9 +54,11 @@
             <!-- Nicht authentifizierte Benutzer -->
             <div class="auth-links" sec:authorize="!isAuthenticated()">
               <a class="btn btn-outline-light me-2" th:href="@{/login}"
-                >Login</a>
+                >Login</a
+              >
               <a class="btn btn-outline-light" th:href="@{/register}"
-                >Register</a>
+                >Register</a
+              >
             </div>
 
             <!-- Authentifizierte Benutzer -->
@@ -86,13 +85,14 @@
 
     <footer
       th:fragment="footer"
-      class="bg-dark text-white text-center py-3 mt-auto"
+      class="footer mt-auto text-white text-center py-3"
     >
       <p>&copy; 2025 Learning Journal</p>
     </footer>
 
     <div th:fragment="script">
-      <script src="/js/bootstrap.bundle.min.js"></script>
+      <script src="/js/bootstrap.bundle.min.js">
+      </script>
     </div>
   </body>
 </html>

@@ -1,6 +1,7 @@
 package com.samuel.learningjournal.controller;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,8 @@ public class EntryController {
     // Alle vorhandenen Einträge anzeigen
     @GetMapping("/entries")
     public String listEntries(Model model) {
-        model.addAttribute("entries", entryRepository.findAll());
+        model.addAttribute("entries", entryRepository.findAll()); 
+        //TODO 21.03.25: Entries Tags sortieren -> Methode schreiben
         return "list";
     }
 
@@ -40,7 +42,7 @@ public class EntryController {
     @GetMapping("/entries/new")
     public String showNewEntryForm(Model model) {
         model.addAttribute("entry", new Entry());
-        model.addAttribute("tags", tagRepository.findAll());
+        model.addAttribute("tags", tagRepository.findAllByOrderByNameAsc());
         return "form";
     }
 
@@ -68,32 +70,63 @@ public class EntryController {
     
     @GetMapping("/entries/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
-        Entry entry = entryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Ungültige Eintrags-ID: " + id));
+        Entry entry = entryRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Ungültige Eintrags-ID: " + id));
         model.addAttribute("entry", entry);
-        model.addAttribute("tags", tagRepository.findAll());
+
+        // Alle verfügbaren Tags an das Template übergeben
+        List<Tag> tags = tagRepository.findAll();
+        model.addAttribute("tags", tags);
+
         return "entry-edit";
+    }
+
+    @GetMapping("/entries/{entryId}/tags/{tagId}/add")
+    public String addTagToEntry(@PathVariable Long entryId, @PathVariable Long tagId) {
+        
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Eintrag mit der ID: " + entryId));
+
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Tag mit der ID: " + tagId));
+
+        entry.getTags().add(tag);
+        entryRepository.save(entry);
+
+        return "redirect:/entries/" + entryId + "/edit";
+ 
     }
 
     @GetMapping("/entries/{entryId}/tags/{tagId}/remove")
     public String removeTagFromEntry(@PathVariable Long entryId, @PathVariable Long tagId) {
         Entry entry = entryRepository.findById(entryId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Eintrag mit der ID: " + entryId));
+        
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("Ungültiger Tag mit der ID: " + tagId));
 
         entry.getTags().remove(tag);
         entryRepository.save(entry);
 
-        return "redirect:/entries";
+        return "redirect:/entries" + entryId + "/edit";
     }
 
+
+
     @PostMapping("/entries/{id}/edit")
-    public String updateEntry(@PathVariable Long id,@ModelAttribute Entry entry, @RequestParam Set<Long> tagIds) {
+    public String updateEntry(
+        @PathVariable Long id, 
+        @ModelAttribute Entry entry, 
+        @RequestParam(required = false) Set<Long> tagIds) {
+       
         Entry existingEntry = entryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Ungültige Eintrags-ID: " + id));
 
         existingEntry.setTitle(entry.getTitle());
         existingEntry.setContent(entry.getContent());
 
-        Set<Tag> tags = new HashSet<>(tagRepository.findAllById(tagIds));
-        existingEntry.setTags(tags);
+        // Tags aktualisieren
+        if (tagIds != null) {
+            Set<Tag> tags = new HashSet<>(tagRepository.findAllById(tagIds));
+            existingEntry.setTags(tags);
+        } else {
+            existingEntry.setTags(new HashSet<>());
+        }
 
         entryRepository.save(existingEntry);
         return "redirect:/entries";

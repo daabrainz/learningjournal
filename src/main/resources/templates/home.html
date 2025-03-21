@@ -9,13 +9,17 @@
 <body>
 <div th:replace="~{layout :: nav}"></div>
 
-<div class="container mt-5">
+
   <div class="jumbotron text-center">
     <h1 class="display-4">Willkommen bei deinem Learning Journal!</h1>
     <hr class="my-4">
     <a class="btn btn-primary btn-lg" th:href="@{/entries}" role="button">Einträge anzeigen</a>
     <a class="btn btn-secondary btn-lg" th:href="@{/entries/new}" role="button">Neuen Eintrag erstellen</a>
-  </div>
+
+    <div class="puffer-controller">
+
+    </div>
+
 
 
 
