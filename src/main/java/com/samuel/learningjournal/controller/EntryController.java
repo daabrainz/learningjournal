@@ -47,7 +47,8 @@ public class EntryController {
 
     // Neuen Eintrag erstellen
     @GetMapping("/entries/new")
-    public String showNewEntryForm(Model model, @RequestParam(required = false) Long addTag, @RequestParam(required = false) Long removeTag, @ModelAttribute("entry") Entry entry) {
+    public String showNewEntryForm(Model model, @RequestParam(required = false) Long addTag, @RequestParam(required = false) Long removeTag, @ModelAttribute("entry") Entry entry, SessionStatus status) {
+
 
         // Initialisiere die Tag-Liste, falls sie noch nicht existiert
         if (entry.getTags() == null) {
@@ -58,7 +59,9 @@ public class EntryController {
         if (addTag != null) {
             Tag tag = tagRepository.findById(addTag)
                 .orElseThrow(() -> new IllegalArgumentException("Ungültiger Tag mit der ID: " + addTag));
-            entry.getTags().add(tag);
+            if (!entry.getTags().contains(tag)) {
+                entry.getTags().add(tag);
+            }
         }
 
         // Tag entfernen
@@ -78,8 +81,8 @@ public class EntryController {
     public String addEntry(@ModelAttribute Entry entry, SessionStatus status) {
         
         entryRepository.save(entry);
-
         status.setComplete();
+
         return "redirect:/entries";
     }
 
