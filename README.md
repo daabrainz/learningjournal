@@ -15,7 +15,7 @@ Ein digitales Learning-Journal mit folgenden Funktionen:
 - Spring Boot  
 - Spring Security  
 - JPA / Hibernate  
-- PostgreSQL (lokal oder in Docker)
+- H2 Datenbank
 
 ## 🚧 Aktueller Stand
 - Erste Version der API ist lauffähig
